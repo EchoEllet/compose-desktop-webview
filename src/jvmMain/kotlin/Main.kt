@@ -21,10 +21,11 @@ import javafx.concurrent.Worker
 import javafx.embed.swing.JFXPanel
 import javafx.scene.Scene
 import javafx.scene.web.*
-import kotlinx.coroutines.*
 import netscape.javascript.JSObject
 import java.awt.BorderLayout
 import javax.swing.JPanel
+
+private var title by mutableStateOf("Untitled")
 
 @Composable
 @Preview
@@ -35,8 +36,14 @@ fun App(frameWindowScope: FrameWindowScope) {
 
             Box(Modifier.fillMaxSize()) {
                 val webViewConfig =
-                    remember { WebViewConfig(frameWindowScope.window, "https://stackoverflow.com/") }.also {
-                        it.configCallback = object : WebViewConfigCallback {}
+                    remember { WebViewConfig(frameWindowScope.window, "https://www.google.com/") }.also {
+                        it.configCallback = object : WebViewConfigCallback {
+                            override fun onTitleUpdated(newTitle: String?) {
+                                newTitle?.let {
+                                    title = it
+                                }
+                            }
+                        }
                     }
                 WebView(webViewConfig)
 
@@ -53,7 +60,9 @@ fun main() = application(exitProcessOnExit = true) {
     PlatformImpl.addListener(finishListener)
 
 
-    Window(onCloseRequest = {
+    Window(
+        title = title,
+        onCloseRequest = {
         PlatformImpl.removeListener(finishListener)
         exitApplication()
     }) {

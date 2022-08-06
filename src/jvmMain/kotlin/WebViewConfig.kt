@@ -46,7 +46,7 @@ class WebViewConfig(
 
 
 interface WebViewConfigCallback {
-    fun onTitleUpdated(title: String?) = Unit
+    fun onTitleUpdated(newTitle: String?) = Unit
     fun onWebPageStarted() = Unit
     fun onWebPageFinished() = Unit
     fun onWebPageError(error: WebErrorEvent) = Unit
